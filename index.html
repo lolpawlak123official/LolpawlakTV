@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lolpawlak TV</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial;
+      background: #0f0f0f;
+      color: white;
+    }
+
+    .topbar {
+      padding: 12px 20px;
+      background: #202020;
+      color: #3ea6ff;
+      font-weight: bold;
+    }
+
+    .container {
+      display: flex;
+    }
+
+    .sidebar {
+      width: 180px;
+      background: #181818;
+      height: calc(100vh - 48px);
+      padding: 10px;
+    }
+
+    .sidebar div {
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .sidebar div:hover {
+      background: #2a2a2a;
+    }
+
+    .main {
+      flex: 1;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      cursor: pointer;
+    }
+
+    .card img {
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .title {
+      margin-top: 8px;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    iframe {
+      width: 100%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    #player {
+      display: none;
+    }
+
+    button {
+      margin-top: 10px;
+      padding: 8px 14px;
+      background: #3ea6ff;
+      border: none;
+      color: white;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="topbar">Lolpawlak TV</div>
+
+<div class="container">
+
+  <div class="sidebar">
+    <div>Home</div>
+    <div onclick="playPlaylist()">Playlist</div>
+  </div>
+
+  <div class="main">
+
+    <div id="player">
+      <iframe id="ytPlayer" allowfullscreen></iframe>
+      <h2 id="videoTitle"></h2>
+      <button onclick="goBack()">Back</button>
+    </div>
+
+    <div id="home">
+      <div class="grid" id="videos"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+const videoIds = [
+"IVAGhBVnD24","iA4gAnl4tVs","_nq1zs6KlJg","V88_lZRwP70",
+"CdznP_fjNWk","kDhUg90HbZ0","dV4p7D3yBRo","bLX1-7J4a7s",
+"RauQTut4QDo","xKCuG6HWaRQ","j6dKka5ubKg","5B3gK71u68E",
+"EH_b9y5kvW4","y72ZTS1Z73Q","g_VKRP7Z0WE","tLPAipwUpZU",
+"QhDj3C4nC8M","F479uTKAlbg"
+];
+
+const container = document.getElementById("videos");
+
+// LOAD TITLES FROM YOUTUBE (oEmbed)
+videoIds.forEach(id => {
+  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`)
+    .then(res => res.json())
+    .then(data => {
+      createCard(id, data.title);
+    })
+    .catch(() => {
+      createCard(id, "Unavailable Video");
+    });
+});
+
+function createCard(id, title) {
+  const card = document.createElement("div");
+  card.className = "card";
+
+  card.innerHTML = `
+    <img src="https://img.youtube.com/vi/${id}/hqdefault.jpg">
+    <div class="title">${title}</div>
+  `;
+
+  card.onclick = () => playVideo(id, title);
+
+  container.appendChild(card);
+}
+
+function playVideo(id, title) {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "block";
+
+  document.getElementById("ytPlayer").src =
+    `https://www.youtube.com/embed/${id}?autoplay=1`;
+
+  document.getElementById("videoTitle").innerText = title;
+}
+
+function goBack() {
+  document.getElementById("player").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  document.getElementById("ytPlayer").src = "";
+}
+
+// PLAYLIST
+function playPlaylist() {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "block";
+
+  document.getElementById("ytPlayer").src =
+    "https://www.youtube.com/embed/videoseries?list=PLPfn50bvpCA8p0NnC_v0a_abfgK4CNjBe&autoplay=1";
+
+  document.getElementById("videoTitle").innerText = "Playlist";
+}
+</script>
+
+</body>
+</html>
