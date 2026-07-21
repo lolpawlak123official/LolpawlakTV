@@ -2,14 +2,10 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Lolpawlak TV</title>
 
 <style>
-
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -53,8 +49,21 @@ body {
   cursor: pointer;
 }
 
+/* CATEGORY DROPDOWN */
+.categories {
+  padding:10px;
+  background:#181818;
+}
+
+.categories select {
+  padding:8px;
+  background:#2a2a2a;
+  color:white;
+  border:none;
+  border-radius:5px;
+}
+
 .main {
-  width: 100%;
   padding: 20px;
 }
 
@@ -84,9 +93,7 @@ body {
   font-size:14px;
 }
 
-#player {
-  display:none;
-}
+#player { display:none; }
 
 iframe {
   width:100%;
@@ -95,317 +102,235 @@ iframe {
   border-radius:10px;
 }
 
+/* BLUE BACK BUTTON */
 button {
   margin-top:10px;
-  padding:8px 14px;
   background:#3ea6ff;
   color:white;
   border:none;
+  padding:8px 14px;
+  cursor:pointer;
   border-radius:5px;
 }
 
+button:hover {
+  background:#1e8eea;
+}
+
 @media(max-width:768px){
-
-.topbar {
-  flex-direction:column;
-  align-items:stretch;
-}
-
-.logo {
-  text-align:center;
-}
-
-.main {
-  padding:10px;
-}
-
-.grid {
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
-}
-
-.title {
-  font-size:12px;
-}
-
+  .grid { grid-template-columns:repeat(2,1fr); }
 }
 
 @media(max-width:400px){
-
-.grid {
-  grid-template-columns:1fr;
+  .grid { grid-template-columns:1fr; }
 }
-
-}
-
 </style>
-
 </head>
-
 
 <body>
 
-
 <div class="topbar">
+  <div class="logo">Lolpawlak TV</div>
 
-<div class="logo">
-Lolpawlak TV
+  <div class="search">
+    <input id="searchInput" placeholder="Search">
+    <button onclick="search()">Search</button>
+  </div>
 </div>
 
-
-<div class="search">
-
-<input id="searchInput" placeholder="Search">
-
-<button onclick="search()">
-Search
-</button>
-
+<div class="categories">
+  <select onchange="filterCategory(this.value)">
+    <option value="All">All</option>
+    <option value="Lolpawlak Show">Lolpawlak Show</option>
+    <option value="Stickmin Gang">Stickmin Gang</option>
+    <option value="FPE">FPE</option>
+    <option value="Trollge">Trollge</option>
+    <option value="FlipaClip">FlipaClip</option>
+    <option value="CountryBalls">CountryBalls</option>
+    <option value="NO MUSIC">NO MUSIC</option>
+  </select>
 </div>
-
-</div>
-
-
 
 <div class="main">
 
-
 <div id="player">
-
-<iframe id="ytPlayer" allowfullscreen></iframe>
-
-<h2 id="videoTitle"></h2>
-
-<button onclick="goBack()">
-Back
-</button>
-
+  <iframe id="ytPlayer" allowfullscreen></iframe>
+  <h2 id="videoTitle"></h2>
+  <button onclick="goBack()">Back</button>
 </div>
-
-
 
 <div id="home">
-
-<div class="grid" id="videos"></div>
-
+  <div class="grid" id="videos"></div>
 </div>
 
-
 </div>
-
-
-
-
-
 <script>
 
+const videoData = [
 
-const videoIds = [
-
-"IVAGhBVnD24",
-"iA4gAnl4tVs",
-"_nq1zs6KlJg",
-"V88_lZRwP70",
-"CdznP_fjNWk",
-"kDhUg90HbZ0",
-"dV4p7D3yBRo",
-"bLX1-7J4a7s",
-"RauQTut4QDo",
-"xKCuG6HWaRQ",
-"j6dKka5ubKg",
-"5B3gK71u68E",
-"EH_b9y5kvW4",
-"y72ZTS1Z73Q",
-"g_VKRP7Z0WE",
-"tLPAipwUpZU",
-"QhDj3C4nC8M",
-"F479uTKAlbg",
-"fcTWUiivxrA",
-"n4rTgJvHVnE",
-"c6sfVuYah1A",
-"4owj7m1yuMc",
-"StoOclRf8U8",
-"Eez7qWEQ2Ww",
-"N_RECvmrirI",
-"--CCDbmPBdY",
-"FOHdMiHSNYY",
-"-Zg_4hJB1O4",
-"b_FIs_eyyVY",
-"zToRBWtcSPU",
-"EVnMa7ucU_Q",
-"Yojc4RJxwCw",
-"QuIZTckh5hE",
-"edSN0G_JgvA",
-"iwnmT-bWklc",
-"VJGhdyqUJvw",
-"X_uNLrPg-sA",
-"TqgMBVg0Sm4"
+{ id:"IVAGhBVnD24", categories:["Lolpawlak Show","Stickmin Gang"] },
+{ id:"iA4gAnl4tVs", categories:["Stickmin Gang"] },
+{ id:"_nq1zs6KlJg", categories:["Stickmin Gang"] },
+{ id:"V88_lZRwP70", categories:["FPE"] },
+{ id:"CdznP_fjNWk", categories:["FPE"] },
+{ id:"kDhUg90HbZ0", categories:["FPE"] },
+{ id:"dV4p7D3yBRo", categories:["FPE"] },
+{ id:"bLX1-7J4a7s", categories:["FPE"] },
+{ id:"RauQTut4QDo", categories:["FPE"] },
+{ id:"xKCuG6HWaRQ", categories:["FPE"] },
+{ id:"j6dKka5ubKg", categories:["FPE"] },
+{ id:"5B3gK71u68E", categories:["FPE"] },
+{ id:"EH_b9y5kvW4", categories:["Trollge"] },
+{ id:"y72ZTS1Z73Q", categories:["FPE"] },
+{ id:"g_VKRP7Z0WE", categories:["FPE"] },
+{ id:"tLPAipwUpZU", categories:["FPE"] },
+{ id:"QhDj3C4nC8M", categories:["FPE"] },
+{ id:"F479uTKAlbg", categories:["FPE"] },
+{ id:"fcTWUiivxrA", categories:["Lolpawlak Show"] },
+{ id:"n4rTgJvHVnE", categories:["FlipaClip"] },
+{ id:"c6sfVuYah1A", categories:["FPE"] },
+{ id:"4owj7m1yuMc", categories:["FPE"] },
+{ id:"StoOclRf8U8", categories:["FPE"] },
+{ id:"Eez7qWEQ2Ww", categories:["CountryBalls"] },
+{ id:"N_RECvmrirI", categories:["Trollge"] },
+{ id:"--CCDbmPBdY", categories:["Trollge"] },
+{ id:"FOHdMiHSNYY", categories:["Trollge"] },
+{ id:"-Zg_4hJB1O4", categories:["Trollge"] },
+{ id:"b_FIs_eyyVY", categories:["Trollge"] },
+{ id:"zToRBWtcSPU", categories:["Trollge"] },
+{ id:"EVnMa7ucU_Q", categories:["Trollge"] },
+{ id:"Yojc4RJxwCw", categories:["Trollge"] },
+{ id:"QuIZTckh5h5hE", categories:["Trollge"] },
+{ id:"edSN0G_JgvA", categories:["Trollge"] },
+{ id:"iwnmT-bWklc", categories:["Trollge"] },
+{ id:"VJGhdyqUJvw", categories:["Trollge"] },
+{ id:"X_uNLrPg-sA", categories:["Trollge"] },
+{ id:"TqgMBVg0Sm4", categories:["NO MUSIC"] }
 
 ];
 
 
-let allVideos = [];
+// RANDOMIZER
+videoData.sort(() => Math.random() - 0.5);
 
+
+let allVideos = [];
 const container = document.getElementById("videos");
 
 
+videoData.forEach((v,i)=>{
 
-videoIds.forEach((id,index)=>{
+  let video = {
+    id:v.id,
+    categories:v.categories,
+    title:"Video " + (i+1)
+  };
 
-
-let video = {
-
-id:id,
-
-title:"Video " + (index + 1)
-
-};
-
-
-allVideos.push(video);
-
-createCard(video);
+  allVideos.push(video);
+  createCard(video);
 
 
-
-fetch(
-`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${id}&format=json`
-)
-
-
-.then(res=>res.json())
-
-
-.then(data=>{
-
-video.title=data.title;
-
-refreshCards();
-
-})
-
-.catch(()=>{});
-
+  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${v.id}&format=json`)
+  .then(r=>r.json())
+  .then(data=>{
+    video.title=data.title;
+    refreshCards();
+  })
+  .catch(()=>{});
 
 });
 
 
-
-
-
 function createCard(video){
 
+  let card=document.createElement("div");
 
-let card=document.createElement("div");
+  card.className="card";
 
-
-card.className="card";
-
-
-card.innerHTML = `
-
-<img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
-
-<div class="title">
-${video.title}
-</div>
-
-`;
+  card.innerHTML=`
+    <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
+    <div class="title">${video.title}</div>
+  `;
 
 
+  card.onclick=()=>{
+    playVideo(video.id,video.title);
+  };
 
-card.onclick = () => playVideo(video.id,video.title);
 
-
-container.appendChild(card);
-
+  container.appendChild(card);
 
 }
-
-
 
 
 
 function refreshCards(){
 
-container.innerHTML="";
+  container.innerHTML="";
 
-allVideos.forEach(createCard);
+  allVideos.forEach(createCard);
 
 }
-
-
 
 
 
 function playVideo(id,title){
 
+  document.getElementById("home").style.display="none";
 
-document.getElementById("home").style.display="none";
-
-
-document.getElementById("player").style.display="block";
+  document.getElementById("player").style.display="block";
 
 
-
-document.getElementById("ytPlayer").src =
-"https://www.youtube.com/embed/" + id + "?autoplay=1";
-
+  document.getElementById("ytPlayer").src =
+  "https://www.youtube.com/embed/"+id+"?autoplay=1";
 
 
-document.getElementById("videoTitle").innerText=title;
-
+  document.getElementById("videoTitle").innerText=title;
 
 }
-
-
 
 
 
 function goBack(){
 
+  document.getElementById("player").style.display="none";
 
-document.getElementById("player").style.display="none";
+  document.getElementById("home").style.display="block";
 
-
-document.getElementById("home").style.display="block";
-
-
-document.getElementById("ytPlayer").src="";
-
+  document.getElementById("ytPlayer").src="";
 
 }
 
 
 
-
-
 function search(){
 
+  let q=document.getElementById("searchInput").value.toLowerCase();
 
-let query =
-document.getElementById("searchInput").value.toLowerCase();
-
-
-
-container.innerHTML="";
+  container.innerHTML="";
 
 
+  allVideos
+  .filter(v=>v.title.toLowerCase().includes(q))
+  .forEach(createCard);
 
-allVideos
+}
 
-.filter(video =>
-video.title.toLowerCase().includes(query)
-)
 
-.forEach(createCard);
 
+function filterCategory(cat){
+
+  container.innerHTML="";
+
+
+  allVideos
+  .filter(v=>cat==="All" || v.categories.includes(cat))
+  .forEach(createCard);
 
 }
 
 
 </script>
 
-
 </body>
-</html>
+  </html>
