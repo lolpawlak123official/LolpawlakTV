@@ -1,40 +1,120 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Lolpawlak TV</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background: #0f0f0f;
   color: white;
 }
+
+body.light-theme {
+  background: #f5f5f5;
+  color: #111;
+}
+
+.topbar,
+.side-menu {
+  background: #202020;
+}
+
+body.light-theme .topbar,
+body.light-theme .side-menu {
+  background: #e5e5e5;
+}
+
+body.light-theme .categories {
+  background: #ededed;
+}
+
+body.light-theme .search input {
+  background: white;
+  color: #111;
+  border-color: #bbb;
+}
+
+body.light-theme .categories select,
+body.light-theme #themeSelect {
+  background: #ddd;
+  color: #111;
+}
+
+body.light-theme .menu-item {
+  color: #111;
+}
+
+/* TOP BAR */
 
 .topbar {
   display: flex;
   align-items: center;
   gap: 15px;
   padding: 12px 16px;
-  background: #202020;
 }
 
 .logo {
   color: #3ea6ff;
   font-weight: bold;
   font-size: 20px;
+  white-space: nowrap;
 }
+
+/* SVG MENU ICON */
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: transparent;
+  color: white;
+  border: 0;
+  padding: 4px 2px;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menu-button:hover {
+  background: transparent;
+  opacity: 0.8;
+}
+
+.menu-button svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+body.light-theme .menu-button {
+  color: #111;
+}
+
+/* SEARCH */
 
 .search {
   flex: 1;
   display: flex;
+  min-width: 0;
 }
 
 .search input {
   width: 100%;
+  min-width: 0;
   padding: 9px;
   background: #121212;
   border: 1px solid #333;
@@ -49,19 +129,124 @@ body {
   cursor: pointer;
 }
 
+/* SIDE MENU */
+
+.side-menu {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 260px;
+  max-width: 85vw;
+  height: 100vh;
+  padding: 14px;
+  background: #202020;
+  box-shadow: 4px 0 14px rgba(0,0,0,.35);
+  overflow-y: auto;
+}
+
+.side-menu.open {
+  display: block;
+}
+
+.menu-heading {
+  padding: 8px 12px 14px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 6px 0;
+  padding: 12px;
+  text-align: left;
+  background: transparent;
+  color: white;
+  border: 0;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: rgba(128,128,128,.2);
+}
+
+.menu-item.close-menu {
+  font-size: 18px;
+}
+
+.menu-item svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* SETTINGS */
+
+#settings {
+  display: none;
+}
+
+#settings label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+#themeSelect {
+  padding: 9px 12px;
+  background: #2a2a2a;
+  color: white;
+  border: 1px solid #555;
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+/* VERSION TEXT */
+
+.version-text {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 90vw;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  font-weight: normal;
+  pointer-events: none;
+  z-index: 10;
+}
+
 /* CATEGORY DROPDOWN */
+
 .categories {
-  padding:10px;
-  background:#181818;
+  padding: 10px;
+  background: #181818;
 }
 
 .categories select {
-  padding:8px;
-  background:#2a2a2a;
-  color:white;
-  border:none;
-  border-radius:5px;
+  padding: 8px;
+  background: #2a2a2a;
+  color: white;
+  border: none;
+  border-radius: 5px;
 }
+
+/* MAIN CONTENT */
 
 .main {
   padding: 20px;
@@ -69,11 +254,12 @@ body {
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill,minmax(260px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 18px;
 }
 
 .card {
+  min-width: 0;
   cursor: pointer;
   transition: transform .2s;
 }
@@ -83,63 +269,243 @@ body {
 }
 
 .card img {
-  width:100%;
-  border-radius:10px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
 }
 
 .title {
-  margin-top:8px;
-  font-weight:bold;
-  font-size:14px;
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  overflow-wrap: anywhere;
 }
 
-#player { display:none; }
+/* VIDEO PLAYER */
+
+#player {
+  display: none;
+}
+
+.player-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.player-layout > div {
+  min-width: 0;
+}
+
+#recommended {
+  min-width: 0;
+  width: 100%;
+}
 
 iframe {
-  width:100%;
-  aspect-ratio:16/9;
-  border:none;
-  border-radius:10px;
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 10px;
 }
 
-/* BLUE BACK BUTTON */
+#videoTitle {
+  overflow-wrap: anywhere;
+}
+
+/* RECOMMENDATIONS */
+
+.recommended-card {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.recommended-card img {
+  flex: 0 0 120px;
+  width: 120px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.recommended-card .title {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+
+/* BUTTONS */
+
 button {
-  margin-top:10px;
-  background:#3ea6ff;
-  color:white;
-  border:none;
-  padding:8px 14px;
-  cursor:pointer;
-  border-radius:5px;
+  margin-top: 10px;
+  background: #3ea6ff;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 5px;
 }
 
 button:hover {
-  background:#1e8eea;
+  background: #1e8eea;
 }
 
-@media(max-width:768px){
-  .grid { grid-template-columns:repeat(2,1fr); }
+.menu-button:hover {
+  background: transparent;
 }
 
-@media(max-width:400px){
-  .grid { grid-template-columns:1fr; }
+/* RESPONSIVE LAYOUT */
+
+@media (max-width: 768px) {
+  .topbar {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .player-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .player-layout > div,
+  #recommended {
+    width: 100%;
+  }
+
+  #recommended {
+    order: 2;
+  }
+
+  .recommended-card img {
+    width: 120px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .main {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    font-size: 17px;
+  }
+
+  .search {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 340px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- TOP BAR -->
+
 <div class="topbar">
+
+  <button
+    class="menu-button"
+    aria-label="Open menu"
+    onclick="openMenu()"
+    title="Menu"
+  >
+    <!-- Three dots and hamburger icon drawn with SVG -->
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="5" r="1" fill="currentColor" stroke="none"></circle>
+      <circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"></circle>
+      <circle cx="4" cy="19" r="1" fill="currentColor" stroke="none"></circle>
+      <path d="M9 6h12M9 12h12M9 18h12"></path>
+    </svg>
+  </button>
+
   <div class="logo">Lolpawlak TV</div>
 
   <div class="search">
-    <input id="searchInput" placeholder="Search">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search"
+      aria-label="Search videos"
+      onkeydown="if(event.key === 'Enter') search()"
+    >
     <button onclick="search()">Search</button>
   </div>
+
 </div>
 
-<div class="categories">
-  <select onchange="filterCategory(this.value)">
+<!-- SIDE MENU -->
+
+<div id="sideMenu" class="side-menu" aria-label="Side menu">
+
+  <div class="menu-heading">Lolpawlak TV</div>
+
+  <button class="menu-item close-menu" onclick="closeMenu()">
+    &gt; Back
+  </button>
+
+  <button class="menu-item" onclick="showMain()">
+    <!-- Home icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 10.5 12 3l9 7.5"></path>
+      <path d="M5.5 9.5V21h13V9.5"></path>
+      <path d="M9 21v-7h6v7"></path>
+    </svg>
+    <span>Main</span>
+  </button>
+
+  <button class="menu-item" onclick="showSettings()">
+    <!-- Settings gear icon -->
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path
+        d="m19.4 15 .1.1 1.1.9-1.5 2.6-1.4-.5a8 8 0 0 1-1.7 1l-.2 1.5h-3l-.2-1.5a8 8 0 0 1-1.7-1l-1.4.5L8 16l1.1-.9a7 7 0 0 1 0-2l-1.1-.9 1.5-2.6 1.4.5a8 8 0 0 1 1.7-1l.2-1.5h3l.2 1.5a8 8 0 0 1 1.7 1l1.4-.5 1.5 2.6-1.1.9a7 7 0 0 1-.1 1.9Z"
+        transform="translate(-1 -1)"
+      ></path>
+    </svg>
+    <span>Settings</span>
+  </button>
+
+</div>
+
+<!-- CATEGORIES -->
+
+<div class="categories" id="categoryBar">
+  <select id="categorySelect" onchange="filterCategory(this.value)">
     <option value="All">All</option>
     <option value="Lolpawlak Show">Lolpawlak Show</option>
     <option value="Stickmin Gang">Stickmin Gang</option>
@@ -151,201 +517,376 @@ button:hover {
   </select>
 </div>
 
+<!-- MAIN CONTENT -->
+
 <div class="main">
 
-<div id="player">
-  <iframe id="ytPlayer" allowfullscreen></iframe>
-  <h2 id="videoTitle"></h2>
-  <button onclick="goBack()">Back</button>
+  <!-- SETTINGS -->
+
+  <div id="settings">
+    <h2>Settings</h2>
+
+    <label for="themeSelect">Appearance</label>
+
+    <select id="themeSelect" onchange="changeTheme(this.value)">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+      <option value="system">System</option>
+    </select>
+
+    <p>System follows your device's appearance setting.</p>
+
+    <button onclick="showMain()">Back to Main</button>
+
+    <div id="settingsVersion" class="version-text">
+      Version 1.0.1
+    </div>
+  </div>
+
+  <!-- PLAYER AND RECOMMENDATIONS -->
+
+  <div id="player">
+    <div class="player-layout">
+
+      <div>
+        <iframe
+          id="ytPlayer"
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+
+        <h2 id="videoTitle"></h2>
+
+        <button onclick="goBack()">Back</button>
+      </div>
+
+      <aside id="recommended">
+        <h3>Recommended</h3>
+        <div id="recommendedVideos"></div>
+      </aside>
+
+    </div>
+  </div>
+
+  <!-- VIDEO GRID -->
+
+  <div id="home">
+    <div class="grid" id="videos"></div>
+
+    <div id="mainVersion" class="version-text">
+      Version 1.0.1
+    </div>
+  </div>
+
 </div>
 
-<div id="home">
-  <div class="grid" id="videos"></div>
-</div>
-
-</div>
 <script>
-
 const videoData = [
+  { id:"IVAGhBVnD24", categories:["Lolpawlak Show","Stickmin Gang"] },
+  { id:"iA4gAnl4tVs", categories:["Stickmin Gang"] },
+  { id:"_nq1zs6KlJg", categories:["Stickmin Gang"] },
+  { id:"V88_lZRwP70", categories:["FPE"] },
+  { id:"CdznP_fjNWk", categories:["FPE"] },
+  { id:"kDhUg90HbZ0", categories:["FPE"] },
+  { id:"dV4p7D3yBRo", categories:["FPE"] },
+  { id:"bLX1-7J4a7s", categories:["FPE"] },
+  { id:"RauQTut4QDo", categories:["FPE"] },
+  { id:"EH_b9y5kvW4", categories:["Trollge"] },
+  { id:"y72ZTS1Z73Q", categories:["FPE"] },
+  { id:"g_VKRP7Z0WE", categories:["FPE"] },
+  { id:"tLPAipwUpZU", categories:["FPE"] },
+  { id:"QhDj3C4nC8M", categories:["FPE"] },
+  { id:"F479uTKAlbg", categories:["FPE"] },
+  { id:"fcTWUiivxrA", categories:["Lolpawlak Show"] },
+  { id:"n4rTgJvHVnE", categories:["FlipaClip"] },
+  { id:"c6sfVuYah1A", categories:["FPE"] },
+  { id:"4owj7m1yuMc", categories:["FPE"] },
+  { id:"StoOclRf8U8", categories:["FPE"] },
+  { id:"Eez7qWEQ2Ww", categories:["CountryBalls"] },
+  { id:"N_RECvmrirI", categories:["Trollge"] },
+  { id:"--CCDbmPBdY", categories:["Trollge"] },
+  { id:"FOHdMiHSNYY", categories:["Trollge"] },
+  { id:"-Zg_4hJB1O4", categories:["Trollge"] },
+  { id:"b_FIs_eyyVY", categories:["Trollge"] },
+  { id:"zToRBWtcSPU", categories:["Trollge"] },
+  { id:"EVnMa7ucU_Q", categories:["Trollge"] },
+  { id:"Yojc4RJxwCw", categories:["Trollge"] },
+  { id:"edSN0G_JgvA", categories:["Trollge"] },
+  { id:"iwnmT-bWklc", categories:["Trollge"] },
+  { id:"VJGhdyqUJvw", categories:["Trollge"] },
+  { id:"X_uNLrPg-sA", categories:["Trollge"] },
+  { id:"TqgMBVg0Sm4", categories:["NO MUSIC"] },
+  { id:"LJ_ZB7S395A", categories:["Trollge"] },
+  { id:"HAysuvKVVto", categories:["Trollge"] },
+  { id:"YE0VPd07e58", categories:["Trollge"] },
+  { id:"An5DXSULkXk", categories:["Trollge"] },
+  { id:"va7jc-DK8yI", categories:["Trollge"] },
+  { id:"E4k22z5blG8", categories:["Trollge"] },
+  { id:"0OjiHm-x2E0", categories:["Trollge"] },
+  { id:"5CskRLkfh-8", categories:["Trollge"] },
+  { id:"3vud61mF_9o", categories:["Stickmin Gang"] },
+  { id:"t37HODuDYnA", categories:["Stickmin Gang"] },
+  { id:"fLimDh-8gUI", categories:["Stickmin Gang"] },
+  { id:"HtOTAtgXQjQ", categories:["Stickmin Gang"] },
+  { id:"4KftVkwBi74", categories:["Stickmin Gang"] },
+  { id:"PlMZ7vtvCH4", categories:["Stickmin Gang"] },
+  { id:"B2xITkT0VXI", categories:["Stickmin Gang"] },
+  { id:"F25To901FWI", categories:["Stickmin Gang"] },
+  { id:"8JkcaDrZF_c", categories:["Stickmin Gang"] },
+  { id:"PoIUeYdsL3E", categories:["Stickmin Gang"] },
+  { id:"a2ogYeLlLOs", categories:["Stickmin Gang"] },
+  { id:"7uN4BtJvRNM", categories:["FPE"] },
+  { id:"C5pRkyCpOd4", categories:["FPE"] },
+  { id:"-hbjgZpZdA8", categories:["FPE"] },
+  { id:"v14Rf1b3550", categories:["FPE"] },
+  { id:"Tb4jYMk32js", categories:["Stickmin Gang"] }
 
-{ id:"IVAGhBVnD24", categories:["Lolpawlak Show","Stickmin Gang"] },
-{ id:"iA4gAnl4tVs", categories:["Stickmin Gang"] },
-{ id:"_nq1zs6KlJg", categories:["Stickmin Gang"] },
-{ id:"V88_lZRwP70", categories:["FPE"] },
-{ id:"CdznP_fjNWk", categories:["FPE"] },
-{ id:"kDhUg90HbZ0", categories:["FPE"] },
-{ id:"dV4p7D3yBRo", categories:["FPE"] },
-{ id:"bLX1-7J4a7s", categories:["FPE"] },
-{ id:"RauQTut4QDo", categories:["FPE"] },
-{ id:"EH_b9y5kvW4", categories:["Trollge"] },
-{ id:"y72ZTS1Z73Q", categories:["FPE"] },
-{ id:"g_VKRP7Z0WE", categories:["FPE"] },
-{ id:"tLPAipwUpZU", categories:["FPE"] },
-{ id:"QhDj3C4nC8M", categories:["FPE"] },
-{ id:"F479uTKAlbg", categories:["FPE"] },
-{ id:"fcTWUiivxrA", categories:["Lolpawlak Show"] },
-{ id:"n4rTgJvHVnE", categories:["FlipaClip"] },
-{ id:"c6sfVuYah1A", categories:["FPE"] },
-{ id:"4owj7m1yuMc", categories:["FPE"] },
-{ id:"StoOclRf8U8", categories:["FPE"] },
-{ id:"Eez7qWEQ2Ww", categories:["CountryBalls"] },
-{ id:"N_RECvmrirI", categories:["Trollge"] },
-{ id:"--CCDbmPBdY", categories:["Trollge"] },
-{ id:"FOHdMiHSNYY", categories:["Trollge"] },
-{ id:"-Zg_4hJB1O4", categories:["Trollge"] },
-{ id:"b_FIs_eyyVY", categories:["Trollge"] },
-{ id:"zToRBWtcSPU", categories:["Trollge"] },
-{ id:"EVnMa7ucU_Q", categories:["Trollge"] },
-{ id:"Yojc4RJxwCw", categories:["Trollge"] },
-{ id:"edSN0G_JgvA", categories:["Trollge"] },
-{ id:"iwnmT-bWklc", categories:["Trollge"] },
-{ id:"VJGhdyqUJvw", categories:["Trollge"] },
-{ id:"X_uNLrPg-sA", categories:["Trollge"] },
-{ id:"TqgMBVg0Sm4", categories:["NO MUSIC"] },
-{ id:"LJ_ZB7S395A", categories:["Trollge"] },
-{ id:"HAysuvKVVto", categories:["Trollge"] },
-{ id:"YE0VPd07e58", categories:["Trollge"] },
-{ id:"An5DXSULkXk", categories:["Trollge"] },
-{ id:"va7jc-DK8yI", categories:["Trollge"] },
-{ id:"E4k22z5blG8", categories:["Trollge"] },
-{ id:"0OjiHm-x2E0", categories:["Trollge"] },
-{ id:"5CskRLkfh-8", categories:["Trollge"] },
-{ id:"3vud61mF_9o", categories:["Stickmin Gang"] },
-{ id:"t37HODuDYnA", categories:["Stickmin Gang"] },
-{ id:"fLimDh-8gUI", categories:["Stickmin Gang"] },
-{ id:"HtOTAtgXQjQ", categories:["Stickmin Gang"] },
-{ id:"4KftVkwBi74", categories:["Stickmin Gang"] },
-{ id:"PlMZ7vtvCH4", categories:["Stickmin Gang"] },
-{ id:"B2xITkT0VXI", categories:["Stickmin Gang"] },
-{ id:"F25To901FWI", categories:["Stickmin Gang"] },
-{ id:"8JkcaDrZF_c", categories:["Stickmin Gang"] },
-{ id:"PoIUeYdsL3E", categories:["Stickmin Gang"] },
-{ id:"a2ogYeLlLOs", categories:["Stickmin Gang"] },
-{ id:"7uN4BtJvRNM", categories:["FPE"] }
 ];
 
-
-// RANDOMIZER
+/* Randomize the videos on page load. */
 videoData.sort(() => Math.random() - 0.5);
-
 
 let allVideos = [];
 const container = document.getElementById("videos");
 
-
-videoData.forEach((v,i)=>{
-
-  let video = {
-    id:v.id,
-    categories:v.categories,
-    title:"Video " + (i+1)
+/* Load cards and retrieve their YouTube titles. */
+videoData.forEach((v, i) => {
+  const video = {
+    id: v.id,
+    categories: v.categories,
+    title: "Video " + (i + 1)
   };
 
   allVideos.push(video);
   createCard(video);
 
-
-  fetch(`https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${v.id}&format=json`)
-  .then(r=>r.json())
-  .then(data=>{
-    video.title=data.title;
-    refreshCards();
-  })
-  .catch(()=>{});
-
+  fetch(
+    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${v.id}&format=json`
+  )
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Could not load video title");
+      }
+      return response.json();
+    })
+    .then(data => {
+      video.title = data.title;
+      refreshCards();
+    })
+    .catch(() => {
+      /* Keep the fallback title if YouTube does not return a title. */
+    });
 });
 
+/* Create a video card. */
+function createCard(video) {
+  const card = document.createElement("div");
+  card.className = "card";
 
-function createCard(video){
+  const thumbnail = document.createElement("img");
+  thumbnail.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+  thumbnail.alt = "";
+  thumbnail.loading = "lazy";
 
-  let card=document.createElement("div");
+  const title = document.createElement("div");
+  title.className = "title";
+  title.textContent = video.title;
 
-  card.className="card";
+  card.appendChild(thumbnail);
+  card.appendChild(title);
 
-  card.innerHTML=`
-    <img src="https://img.youtube.com/vi/${video.id}/hqdefault.jpg">
-    <div class="title">${video.title}</div>
-  `;
-
-
-  card.onclick=()=>{
-    playVideo(video.id,video.title);
-  };
-
+  card.addEventListener("click", () => {
+    playVideo(video.id, video.title);
+  });
 
   container.appendChild(card);
-
 }
 
+/* Refresh the visible video cards. */
+function refreshCards() {
+  const query = document.getElementById("searchInput").value
+    .trim()
+    .toLowerCase();
 
+  const category = document.getElementById("categorySelect").value;
 
-function refreshCards(){
+  container.innerHTML = "";
 
-  container.innerHTML="";
+  allVideos
+    .filter(video => {
+      const matchesSearch =
+        video.title.toLowerCase().includes(query) ||
+        video.id.toLowerCase().includes(query);
 
-  allVideos.forEach(createCard);
+      const matchesCategory =
+        category === "All" || video.categories.includes(category);
 
+      return matchesSearch && matchesCategory;
+    })
+    .forEach(createCard);
 }
 
-
-
-function playVideo(id,title){
-
-  document.getElementById("home").style.display="none";
-
-  document.getElementById("player").style.display="block";
-
+/* Play a selected video. */
+function playVideo(id, title) {
+  document.getElementById("home").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("categoryBar").style.display = "none";
+  document.getElementById("player").style.display = "block";
 
   document.getElementById("ytPlayer").src =
-  "https://www.youtube.com/embed/"+id+"?autoplay=1";
+    "https://www.youtube.com/embed/" + encodeURIComponent(id) + "?autoplay=1";
 
+  document.getElementById("videoTitle").textContent = title;
 
-  document.getElementById("videoTitle").innerText=title;
-
+  loadRecommended(id);
 }
 
+/* Return from the player to the video grid. */
+function goBack() {
+  document.getElementById("player").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  document.getElementById("categoryBar").style.display = "block";
 
-
-function goBack(){
-
-  document.getElementById("player").style.display="none";
-
-  document.getElementById("home").style.display="block";
-
-  document.getElementById("ytPlayer").src="";
-
+  document.getElementById("ytPlayer").src = "";
+  refreshCards();
 }
 
-
-
-function search(){
-
-  let q=document.getElementById("searchInput").value.toLowerCase();
-
-  container.innerHTML="";
-
-
-  allVideos
-  .filter(v=>v.title.toLowerCase().includes(q))
-  .forEach(createCard);
-
+/* Search by title or video ID. */
+function search() {
+  refreshCards();
 }
 
-
-
-function filterCategory(cat){
-
-  container.innerHTML="";
-
-
-  allVideos
-  .filter(v=>cat==="All" || v.categories.includes(cat))
-  .forEach(createCard);
-
+/* Filter videos by category. */
+function filterCategory(category) {
+  document.getElementById("categorySelect").value = category;
+  refreshCards();
 }
 
+/* Menu controls. */
+function openMenu() {
+  document.getElementById("sideMenu").classList.add("open");
+}
 
+function closeMenu() {
+  document.getElementById("sideMenu").classList.remove("open");
+}
+
+/* Show the main page. */
+function showMain() {
+  closeMenu();
+
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  document.getElementById("categoryBar").style.display = "block";
+
+  document.getElementById("ytPlayer").src = "";
+
+  refreshCards();
+}
+
+/* Show settings. */
+function showSettings() {
+  closeMenu();
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  document.getElementById("categoryBar").style.display = "none";
+  document.getElementById("settings").style.display = "block";
+
+  document.getElementById("ytPlayer").src = "";
+}
+
+/* DARK / LIGHT / SYSTEM THEME */
+
+const themeSelect = document.getElementById("themeSelect");
+const systemTheme = window.matchMedia("(prefers-color-scheme: light)");
+
+function applyTheme(mode) {
+  const useLight =
+    mode === "light" ||
+    (mode === "system" && systemTheme.matches);
+
+  document.body.classList.toggle("light-theme", useLight);
+}
+
+function changeTheme(mode) {
+  localStorage.setItem("lolpawlak-theme", mode);
+  themeSelect.value = mode;
+  applyTheme(mode);
+}
+
+function loadTheme() {
+  const savedTheme = localStorage.getItem("lolpawlak-theme") || "system";
+
+  themeSelect.value = savedTheme;
+  applyTheme(savedTheme);
+}
+
+/* Update automatically when the device theme changes. */
+if (typeof systemTheme.addEventListener === "function") {
+  systemTheme.addEventListener("change", () => {
+    if (themeSelect.value === "system") {
+      applyTheme("system");
+    }
+  });
+} else if (typeof systemTheme.addListener === "function") {
+  systemTheme.addListener(() => {
+    if (themeSelect.value === "system") {
+      applyTheme("system");
+    }
+  });
+}
+
+/* Recommended videos, prioritizing videos in the same category. */
+function loadRecommended(currentId) {
+  const list = document.getElementById("recommendedVideos");
+  list.innerHTML = "";
+
+  const current = allVideos.find(video => video.id === currentId);
+
+  const others = allVideos
+    .filter(video => video.id !== currentId)
+    .sort((a, b) => {
+      const aMatch = current &&
+        a.categories.some(category => current.categories.includes(category));
+
+      const bMatch = current &&
+        b.categories.some(category => current.categories.includes(category));
+
+      return Number(bMatch) - Number(aMatch);
+    })
+    .slice(0, 8);
+
+  others.forEach(video => {
+    const card = document.createElement("div");
+    card.className = "recommended-card";
+
+    const thumbnail = document.createElement("img");
+    thumbnail.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+    thumbnail.alt = "";
+    thumbnail.loading = "lazy";
+
+    const title = document.createElement("div");
+    title.className = "title";
+    title.textContent = video.title;
+
+    card.appendChild(thumbnail);
+    card.appendChild(title);
+
+    card.addEventListener("click", () => {
+      playVideo(video.id, video.title);
+    });
+
+    list.appendChild(card);
+  });
+}
+
+/* Initialize the saved appearance setting. */
+loadTheme();
 </script>
 
 </body>
-  </html>
+</html>
