@@ -1,0 +1,1026 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lolpawlak TV</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+:root {
+  --accent: #3ea6ff;
+  --accent-hover: #1e8eea;
+  --background: #0f0f0f;
+  --surface: #202020;
+  --surface-secondary: #181818;
+  --text: white;
+  --border: #333;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--text);
+}
+
+body.light-theme {
+  --background: #f5f5f5;
+  --surface: #e5e5e5;
+  --surface-secondary: #ededed;
+  --text: #111;
+  --border: #bbb;
+}
+
+/* DANGER THEME */
+
+body.danger-theme {
+  --accent: #EFE4B0;
+  --accent-hover: #d9cd96;
+}
+
+/* TOP BAR */
+
+.topbar,
+.side-menu {
+  background: var(--surface);
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 12px 16px;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  flex-shrink: 0;
+}
+
+.logo img {
+  display: block;
+  height: 36px;
+  width: auto;
+  max-width: 180px;
+  object-fit: contain;
+}
+
+/* MENU BUTTON */
+
+.menu-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  padding: 4px 2px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.menu-button:hover {
+  background: transparent;
+  opacity: 0.8;
+}
+
+.menu-button svg {
+  display: block;
+  width: 23px;
+  height: 23px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* SEARCH */
+
+.search {
+  flex: 1;
+  display: flex;
+  min-width: 0;
+}
+
+.search input {
+  width: 100%;
+  min-width: 0;
+  padding: 9px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.search button {
+  background: var(--accent);
+  color: #111;
+  border: none;
+  padding: 9px 15px;
+  cursor: pointer;
+}
+
+/* SIDE MENU */
+
+.side-menu {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 260px;
+  max-width: 85vw;
+  height: 100vh;
+  padding: 14px;
+  box-shadow: 4px 0 14px rgba(0,0,0,.35);
+  overflow-y: auto;
+}
+
+.side-menu.open {
+  display: block;
+}
+
+.menu-heading {
+  padding: 8px 12px 14px;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  margin: 6px 0;
+  padding: 12px;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  border-radius: 5px;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.menu-item:hover {
+  background: rgba(128,128,128,.2);
+}
+
+.menu-item svg {
+  width: 21px;
+  height: 21px;
+  flex-shrink: 0;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* SETTINGS */
+
+#settings {
+  display: none;
+}
+
+#settings label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+}
+
+#themeSelect,
+#extraThemeSelect {
+  padding: 9px 12px;
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 15px;
+}
+
+#extraThemes {
+  display: none;
+  margin-top: 12px;
+}
+
+#extraThemes.visible {
+  display: block;
+}
+
+#extraThemes button {
+  margin-right: 8px;
+  margin-bottom: 8px;
+}
+
+.theme-normal-button {
+  background: #3ea6ff !important;
+  color: white !important;
+}
+
+.theme-danger-button {
+  background: #EFE4B0 !important;
+  color: #111 !important;
+}
+
+/* VERSION */
+
+.version-text {
+  position: fixed;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 90vw;
+  text-align: center;
+  color: #888;
+  font-size: 12px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* CATEGORIES */
+
+.categories {
+  padding: 10px;
+  background: var(--surface-secondary);
+}
+
+.categories select {
+  padding: 8px;
+  background: var(--surface);
+  color: var(--text);
+  border: none;
+  border-radius: 5px;
+}
+
+/* MAIN */
+
+.main {
+  padding: 20px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  min-width: 0;
+  cursor: pointer;
+  transition: transform .2s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.title {
+  margin-top: 8px;
+  font-weight: bold;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+/* DEBUG */
+
+.video-id {
+  display: none;
+  margin-top: 4px;
+  color: #888;
+  font-size: 11px;
+  overflow-wrap: anywhere;
+}
+
+body.debug-mode .video-id {
+  display: block;
+}
+
+/* PLAYER */
+
+#player {
+  display: none;
+}
+
+.player-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(260px, 1fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.player-layout > div {
+  min-width: 0;
+}
+
+#recommended {
+  min-width: 0;
+  width: 100%;
+}
+
+iframe {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: none;
+  border-radius: 10px;
+}
+
+#videoTitle {
+  overflow-wrap: anywhere;
+}
+
+/* RECOMMENDATIONS */
+
+.recommended-card {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  min-width: 0;
+}
+
+.recommended-card img {
+  flex: 0 0 120px;
+  width: 120px;
+  height: 68px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.recommended-card .title {
+  margin-top: 0;
+  overflow-wrap: anywhere;
+}
+
+/* BUTTONS */
+
+button {
+  margin-top: 10px;
+  background: var(--accent);
+  color: #111;
+  border: none;
+  padding: 8px 14px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background: var(--accent-hover);
+}
+
+.menu-button:hover {
+  background: transparent;
+}
+
+/* MOBILE */
+
+@media (max-width: 768px) {
+  .topbar {
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .logo img {
+    height: 32px;
+    max-width: 150px;
+  }
+
+  .player-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .player-layout > div,
+  #recommended {
+    width: 100%;
+  }
+
+  #recommended {
+    order: 2;
+  }
+
+  .recommended-card img {
+    width: 120px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .main {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    flex-wrap: wrap;
+  }
+
+  .logo {
+    height: 32px;
+  }
+
+  .logo img {
+    height: 32px;
+    max-width: 150px;
+  }
+
+  .search {
+    flex-basis: 100%;
+    order: 3;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .title {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 340px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .logo img {
+    max-width: 125px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- TOP BAR -->
+
+<div class="topbar">
+
+  <button
+    class="menu-button"
+    aria-label="Open menu"
+    onclick="openMenu()"
+    title="Menu"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="4" cy="5" r="1" fill="currentColor" stroke="none"></circle>
+      <circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"></circle>
+      <circle cx="4" cy="19" r="1" fill="currentColor" stroke="none"></circle>
+      <path d="M9 6h12M9 12h12M9 18h12"></path>
+    </svg>
+  </button>
+
+  <div class="logo">
+    <img id="siteLogo" src="logos/Normal.png" alt="Lolpawlak TV">
+  </div>
+
+  <div class="search">
+    <input
+      id="searchInput"
+      type="search"
+      placeholder="Search"
+      aria-label="Search videos"
+      onkeydown="if(event.key === 'Enter') search()"
+    >
+    <button onclick="search()">Search</button>
+  </div>
+
+</div>
+
+<!-- SIDE MENU -->
+
+<div id="sideMenu" class="side-menu" aria-label="Side menu">
+
+  <div class="menu-heading">Lolpawlak TV</div>
+
+  <button class="menu-item" onclick="closeMenu()">
+    &gt; Back
+  </button>
+
+  <button class="menu-item" onclick="showMain()">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 10.5 12 3l9 7.5"></path>
+      <path d="M5.5 9.5V21h13V9.5"></path>
+      <path d="M9 21v-7h6v7"></path>
+    </svg>
+    <span>Main</span>
+  </button>
+
+  <button class="menu-item" onclick="showSettings()">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <circle cx="12" cy="12" r="3"></circle>
+      <path d="M19.4 15a7.8 7.8 0 0 0 0-6l1.2-1-1.5-2.6-1.5.5a7.8 7.8 0 0 0-2-1.1L13.4 3h-3l-.7 1.8a7.8 7.8 0 0 0-2 1.1l-1.5-.5L4.7 8l1.2 1a7.8 7.8 0 0 0 0 6l-1.2 1 1.5 2.6 1.5-.5a7.8 7.8 0 0 0 2 1.1l.7 1.8h3l.7-1.8a7.8 7.8 0 0 0 2-1.1l1.5.5 1.5-2.6-1.2-1Z"></path>
+    </svg>
+    <span>Settings</span>
+  </button>
+
+</div>
+
+<!-- CATEGORIES -->
+
+<div class="categories" id="categoryBar">
+  <select id="categorySelect" onchange="filterCategory(this.value)">
+    <option value="All">All</option>
+    <option value="Lolpawlak Show">Lolpawlak Show</option>
+    <option value="Stickmin Gang">Stickmin Gang</option>
+    <option value="FPE">FPE</option>
+    <option value="Trollge">Trollge</option>
+    <option value="CountryBalls">CountryBalls</option>
+    <option value="NO MUSIC">NO MUSIC</option>
+  </select>
+</div>
+
+<!-- MAIN CONTENT -->
+
+<div class="main">
+
+  <!-- SETTINGS -->
+
+  <div id="settings">
+
+    <h2>Settings</h2>
+
+    <label for="themeSelect">Appearance</label>
+
+    <select id="themeSelect" onchange="handleThemeSelect(this.value)">
+      <option value="dark">Dark</option>
+      <option value="light">Light</option>
+      <option value="system">System</option>
+      <option value="more">More</option>
+    </select>
+
+    <!-- MORE THEMES -->
+
+    <div id="extraThemes">
+
+      <h3>More Themes</h3>
+
+      <button
+        class="theme-normal-button"
+        onclick="changeTheme('normal')"
+      >
+        Normal
+      </button>
+
+      <button
+        class="theme-danger-button"
+        onclick="changeTheme('danger')"
+      >
+        Danger
+      </button>
+
+    </div>
+
+    <label for="debugMode">
+      <input
+        id="debugMode"
+        type="checkbox"
+        onchange="changeDebugMode(this.checked)"
+      >
+      Debug mode (show video IDs)
+    </label>
+
+    <button onclick="showMain()">Back to Main</button>
+
+    <div id="settingsVersion" class="version-text">
+      Version 1.0.1_02
+    </div>
+
+  </div>
+
+  <!-- PLAYER -->
+
+  <div id="player">
+
+    <div class="player-layout">
+
+      <div>
+        <iframe
+          id="ytPlayer"
+          title="YouTube video player"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
+
+        <h2 id="videoTitle"></h2>
+
+        <button onclick="goBack()">Back</button>
+      </div>
+
+      <aside id="recommended">
+        <h3>Recommended</h3>
+        <div id="recommendedVideos"></div>
+      </aside>
+
+    </div>
+
+  </div>
+
+  <!-- VIDEO GRID -->
+
+  <div id="home">
+    <div class="grid" id="videos"></div>
+
+    <div id="mainVersion" class="version-text">
+      Version 1.0.1_02
+    </div>
+  </div>
+
+</div>
+
+<script>
+
+/* VIDEO DATA */
+
+const videoData = [
+  { id:"IVAGhBVnD24", categories:["Lolpawlak Show","Stickmin Gang"] },
+  { id:"iA4gAnl4tVs", categories:["Stickmin Gang"] },
+  { id:"_nq1zs6KlJg", categories:["Stickmin Gang"] },
+  { id:"V88_lZRwP70", categories:["FPE"] },
+  { id:"CdznP_fjNWk", categories:["FPE"] },
+  { id:"kDhUg90HbZ0", categories:["FPE"] },
+  { id:"dV4p7D3yBRo", categories:["FPE"] },
+  { id:"bLX1-7J4a7s", categories:["FPE"] },
+  { id:"RauQTut4QDo", categories:["FPE"] },
+  { id:"EH_b9y5kvW4", categories:["Trollge"] },
+  { id:"y72ZTS1Z73Q", categories:["FPE"] },
+  { id:"g_VKRP7Z0WE", categories:["FPE"] },
+  { id:"tLPAipwUpZU", categories:["FPE"] },
+  { id:"QhDj3C4nC8M", categories:["FPE"] },
+  { id:"F479uTKAlbg", categories:["FPE"] },
+  { id:"fcTWUiivxrA", categories:["Lolpawlak Show"] },
+  { id:"c6sfVuYah1A", categories:["FPE"] },
+  { id:"4owj7m1yuMc", categories:["FPE"] },
+  { id:"StoOclRf8U8", categories:["FPE"] },
+  { id:"Eez7qWEQ2Ww", categories:["CountryBalls"] },
+  { id:"N_RECvmrirI", categories:["Trollge"] },
+  { id:"--CCDbmPBdY", categories:["Trollge"] },
+  { id:"-Zg_4hJB1O4", categories:["Trollge"] },
+  { id:"b_FIs_eyyVY", categories:["Trollge"] },
+  { id:"zToRBWtcSPU", categories:["Trollge"] },
+  { id:"EVnMa7ucU_Q", categories:["Trollge"] },
+  { id:"Yojc4RJxwCw", categories:["Trollge"] },
+  { id:"edSN0G_JgvA", categories:["Trollge"] },
+  { id:"iwnmT-bWklc", categories:["Trollge"] },
+  { id:"VJGhdyqUJvw", categories:["Trollge"] },
+  { id:"X_uNLrPg-sA", categories:["Trollge"] },
+  { id:"TqgMBVg0Sm4", categories:["NO MUSIC"] },
+  { id:"LJ_ZB7S395A", categories:["Trollge"] },
+  { id:"HAysuvKVVto", categories:["Trollge"] },
+  { id:"YE0VPd07e58", categories:["Trollge"] },
+  { id:"An5DXSULkXk", categories:["Trollge"] },
+  { id:"va7jc-DK8yI", categories:["Trollge"] },
+  { id:"E4k22z5blG8", categories:["Trollge"] },
+  { id:"0OjiHm-x2E0", categories:["Trollge"] },
+  { id:"5CskRLkfh-8", categories:["Trollge"] },
+  { id:"3vud61mF_9o", categories:["Stickmin Gang"] },
+  { id:"t37HODuDYnA", categories:["Stickmin Gang"] },
+  { id:"fLimDh-8gUI", categories:["Stickmin Gang"] },
+  { id:"HtOTAtgXQjQ", categories:["Stickmin Gang"] },
+  { id:"4KftVkwBi74", categories:["Stickmin Gang"] },
+  { id:"PlMZ7vtvCH4", categories:["Stickmin Gang"] },
+  { id:"B2xITkT0VXI", categories:["Stickmin Gang"] },
+  { id:"F25To901FWI", categories:["Stickmin Gang"] },
+  { id:"8JkcaDrZF_c", categories:["Stickmin Gang"] },
+  { id:"PoIUeYdsL3E", categories:["Stickmin Gang"] },
+  { id:"a2ogYeLlLOs", categories:["Stickmin Gang"] },
+  { id:"7uN4BtJvRNM", categories:["FPE"] },
+  { id:"C5pRkyCpOd4", categories:["FPE"] },
+  { id:"-hbjgZpZdA8", categories:["FPE"] },
+  { id:"v14Rf1b3550", categories:["FPE"] },
+  { id:"Tb4jYMk32js", categories:["Stickmin Gang"] },
+  { id:"LE2g9pnv0w0", categories:["FPE"] },
+  { id:"yaydPGaRXC8", categories:["FPE"] },
+  { id:"u9SOrtkHMOI", categories:["FPE"] },
+  { id:"DArtrAJjmQg", categories:["Stickmin Gang"] }
+];
+
+/* RANDOMIZE VIDEO ORDER */
+
+videoData.sort(() => Math.random() - 0.5);
+
+let allVideos = [];
+let currentVideoId = null;
+
+const container = document.getElementById("videos");
+
+/* CREATE VIDEO CARDS AND FETCH TITLES */
+
+videoData.forEach((v, i) => {
+
+  const video = {
+    id: v.id,
+    categories: v.categories,
+    title: "Video " + (i + 1)
+  };
+
+  allVideos.push(video);
+  createCard(video);
+
+  fetch(
+    `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${v.id}&format=json`
+  )
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Could not load title");
+      }
+
+      return response.json();
+    })
+    .then(data => {
+      video.title = data.title;
+      refreshCards();
+    })
+    .catch(() => {
+      /* Keep fallback title */
+    });
+
+});
+
+/* CREATE CARD */
+
+function createCard(video) {
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const thumbnail = document.createElement("img");
+  thumbnail.src = `https://img.youtube.com/vi/${video.id}/hqdefault.jpg`;
+  thumbnail.alt = "";
+  thumbnail.loading = "lazy";
+
+  const textContainer = document.createElement("div");
+
+  const title = document.createElement("div");
+  title.className = "title";
+  title.textContent = video.title;
+
+  const videoId = document.createElement("div");
+  videoId.className = "video-id";
+  videoId.textContent = "ID: " + video.id;
+
+  textContainer.appendChild(title);
+  textContainer.appendChild(videoId);
+
+  card.appendChild(thumbnail);
+  card.appendChild(textContainer);
+
+  card.addEventListener("click", () => {
+    playVideo(video.id, video.title);
+  });
+
+  container.appendChild(card);
+}
+
+/* REFRESH VIDEO CARDS */
+
+function refreshCards() {
+
+  const query = document.getElementById("searchInput")
+    .value.trim().toLowerCase();
+
+  const category = document.getElementById("categorySelect").value;
+
+  container.innerHTML = "";
+
+  allVideos
+    .filter(video => {
+
+      const matchesSearch =
+        video.title.toLowerCase().includes(query) ||
+        video.id.toLowerCase().includes(query);
+
+      const matchesCategory =
+        category === "All" ||
+        video.categories.includes(category);
+
+      return matchesSearch && matchesCategory;
+
+    })
+    .forEach(createCard);
+
+}
+
+/* SEARCH */
+
+function search() {
+  refreshCards();
+}
+
+/* FILTER CATEGORY */
+
+function filterCategory(category) {
+  document.getElementById("categorySelect").value = category;
+  refreshCards();
+}
+
+/* PLAY VIDEO */
+
+function playVideo(id, title) {
+
+  currentVideoId = id;
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("categoryBar").style.display = "none";
+  document.getElementById("player").style.display = "block";
+
+  document.getElementById("ytPlayer").src =
+    "https://www.youtube.com/embed/" +
+    encodeURIComponent(id) +
+    "?autoplay=1";
+
+  document.getElementById("videoTitle").textContent = title;
+
+  loadRecommended(id);
+}
+
+/* GO BACK */
+
+function goBack() {
+
+  currentVideoId = null;
+
+  document.getElementById("player").style.display = "none";
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  document.getElementById("categoryBar").style.display = "block";
+
+  document.getElementById("ytPlayer").src = "";
+
+  refreshCards();
+}
+
+/* MENU */
+
+function openMenu() {
+  document.getElementById("sideMenu").classList.add("open");
+}
+
+function closeMenu() {
+  document.getElementById("sideMenu").classList.remove("open");
+}
+
+/* MAIN PAGE */
+
+function showMain() {
+
+  closeMenu();
+  currentVideoId = null;
+
+  document.getElementById("settings").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  document.getElementById("home").style.display = "block";
+  document.getElementById("categoryBar").style.display = "block";
+
+  document.getElementById("ytPlayer").src = "";
+
+  refreshCards();
+}
+
+/* SETTINGS */
+
+function showSettings() {
+
+  closeMenu();
+  currentVideoId = null;
+
+  document.getElementById("home").style.display = "none";
+  document.getElementById("player").style.display = "none";
+  document.getElementById("categoryBar").style.display = "none";
+  document.getElementById("settings").style.display = "block";
+
+  document.getElementById("ytPlayer").src = "";
+}
+
+/* DEBUG MODE */
+
+function changeDebugMode(enabled) {
+
+  localStorage.setItem(
+    "lolpawlak-debug",
+    enabled ? "true" : "false"
+  );
+
+  document.body.classList.toggle("debug-mode", enabled);
+
+  refreshCards();
+
+  if (currentVideoId) {
+    loadRecommended(currentVideoId);
+  }
+}
+
+function loadDebugMode() {
+
+  const enabled =
+    localStorage.getItem("lolpawlak-debug") === "true";
+
+  document.getElementById("debugMode").checked = enabled;
+
+  document.body.classList.toggle("debug-mode", enabled);
+}
+
+/* THEMES */
+
+const themeSelect = document.getElementById("themeSelect");
+const extraThemes = document.getElementById("extraThemes");
+const systemTheme = window.matchMedia("(prefers-color-scheme: light)");
+
+/* HANDLE THE DROPDOWN */
+
+function handleThemeSelect(value) {
+
+  if (value === "more") {
+
+    extraThemes.classList.add("visible");
+
+    return;
+  }
+
+  extraThemes.classList.remove("visible");
+
+  changeTheme(value);
+}
+
+/* CHANGE THE THEME */
+
+function changeTheme(mode) {
+
+  localStorage.setItem("lolpawlak-theme", mode);
+
+  document.body.classList.remove(
+    "light-theme",
+    "danger-theme"
+  );
+
+  const logo = document.getElementById("siteLogo");
+
+  if (mode === "light") {
+
+    document.body.classList.add("light-theme");
+
+    logo.src = "logos/Normal.png";
+
+    themeSelect.value = "light";
+
+    extraThemes.classList.remove("visible");
+
+  } else if (mode === "system") {
+
+    applySystemTheme();
+
+    logo.src = "logos/Normal.png";
+
+    themeSelect.value = "system";
+
+    extraThemes.classList.remove("visible");
+
+  } else if (mode === "dark") {
+
+    logo.src = "logos/Normal.png";
+
+    themeSelect.value = "dark";
+
+    extraThemes.classList.remove("visible");
+
+  } else if (mode === "normal") {
+
+    logo.src = "logos/Normal.png";
+
+    themeSelect.value = "more";
+
+    extraThemes.classList.add("visible");
+
+  } else if (mode === "danger") {
+
+    document.body.classList.add("danger-theme");
+
+   
